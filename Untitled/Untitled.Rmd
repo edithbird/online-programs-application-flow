@@ -1,0 +1,68 @@
+---
+# Change the title etc. to your needs:
+title: "Online Programs"
+subtitle: "Application Flow 2019-2019 "
+author: "Office of Marketing and Brand Management"
+address: "University of Southern Maine"     
+logo: C:/Users/christine.iyer/Downloads/blueLogo.png
+field: Exploration
+#logo: examples/logo.png  # insert path to your logo
+
+
+
+
+# Change the following lines only if you know what you are doing:
+date: '`r format(Sys.Date(), "%m\\/ %d\\/ %Y")`'  # today
+fontfamily: lmodern
+fontsize: 12pt
+graphics: null
+papersize: 
+geometry: margin=1.0in
+classoption:
+  - a4paper
+  - oneside
+  #- more options here, see rmarkdown documentation 
+lang: en-En
+lof: yes
+lot: no
+toc: yes
+numbersections: yes
+UP_title: yes
+UP_subtitle: yes
+shaded_quote: no
+output: 
+  yart::yart
+---
+
+
+
+```{r setup, include=FALSE, echo = FALSE, warning = FALSE, fig.align="center"}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Basic Description
+
+Project Workflow [Wrike](https://www.wrike.com/open.htm?id=523544264) 
+
+
+### Wrike Link
+Please see the documentation of [RMarkdown](http://rmarkdown.rstudio.com/) for more details on how to write RMarkdown documents.
+
+
+### Github Link 
+Please see the documentation of [RMarkdown](http://rmarkdown.rstudio.com/) for more details on how to write RMarkdown documents.
+
+
+
+"Lorem ipsum" dolor sit amet, consectetur adipiscing elit. Proin mollis
+
+# Conclusions
+
+[If some literature is cited, it appears here]
+
+<!-- These lines ensure references are set with hanging indents in PDF documents -->
+\setlength{\parindent}{-0.5in}
+\setlength{\leftskip}{0.5in}
+
+
+

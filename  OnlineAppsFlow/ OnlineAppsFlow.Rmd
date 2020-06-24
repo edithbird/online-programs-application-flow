@@ -1,0 +1,61 @@
+---
+title: "Different Title"
+subtitle: "June 22, 2020"
+author: "Office of Marketing and Brand Management"
+address: "University of Southern Maine"     
+logo: C:/Users/christine.iyer/Downloads/blueLogo.png
+date: '`r format(Sys.Date(), "%B %d, %Y")`' 
+fontfamily: lmodern
+fontsize: 12pt
+graphics: null
+papersize: 
+geometry: margin=1.0in
+classoption:
+  - oneside
+  #- more options here, see rmarkdown documentation 
+UP_title: yes
+UP_subtitle: yes
+shaded_quote: yes
+output: 
+  yart::yart
+---
+
+
+```{r setup, include=FALSE, echo = FALSE, warning = FALSE, fig.align="center"}
+knitr::opts_chunk$set(
+	echo = FALSE,
+	message = FALSE,
+	warning = FALSE
+)
+```
+
+
+
+
+
+# Basic Description
+
+
+
+
+
+---
+
+# Findings
+
+### Seniors
+
+### Juniors
+
+
+
+### Sophomores
+
+
+
+---
+
+# Conclusions 
+
+* fbdfh
+*chgjghv
