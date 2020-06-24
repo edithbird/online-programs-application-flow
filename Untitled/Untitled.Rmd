@@ -1,7 +1,6 @@
 ---
-# Change the title etc. to your needs:
 title: "Online Programs"
-subtitle: "Application Flow 2019-2019 "
+subtitle: "Application Flow 2018-2019 "
 author: "Office of Marketing and Brand Management"
 address: "University of Southern Maine"     
 logo: C:/Users/christine.iyer/Downloads/blueLogo.png
@@ -37,32 +36,127 @@ output:
 
 
 ```{r setup, include=FALSE, echo = FALSE, warning = FALSE, fig.align="center"}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(
+	echo = FALSE,
+	message = FALSE,
+	warning = FALSE
+)
+```
+
+
+```{r}
+library(knitr)
+library(dplyr)
+library(ggplot2)
+library(zoo)
+library(lubridate)
 ```
 
 # Basic Description
 
-Project Workflow [Wrike](https://www.wrike.com/open.htm?id=523544264) 
+The purpose of this report is to look at the application flow for online degree programs. These programs are evolving but in order to understand them, it's important to look at how students are applying and where they are from. 
 
+Question that needs to be answered:
 
-### Wrike Link
-Please see the documentation of [RMarkdown](http://rmarkdown.rstudio.com/) for more details on how to write RMarkdown documents.
+1. Are the students in the original data  (51 records) all enrolled?
 
+1. In order to get application dates, this dataset has to be merged with the SF database.
 
-### Github Link 
-Please see the documentation of [RMarkdown](http://rmarkdown.rstudio.com/) for more details on how to write RMarkdown documents.
+## Wrike Link
+See the documentation of [Wrike Project Description](https://www.wrike.com/open.htm?id=523544264)
 
+## Github Link 
+See the documentation of [Github Repository](https://github.com/edithbird/online-programs-application-flow) 
 
 
 "Lorem ipsum" dolor sit amet, consectetur adipiscing elit. Proin mollis
 
+# Findings
+
+```{r}
+SFData <- read.csv("C:/Users/christine.iyer/Box/SpecialProjects/FlowOfApps_OnlinePrograms/Data/SFData.csv", header = T, stringsAsFactors = F)
+data <- read.csv("C:/Users/christine.iyer/Box/SpecialProjects/FlowOfApps_OnlinePrograms/Data/rawData.csv", header = T, stringsAsFactors = F)
+```
+
+```{r}
+Joined <- merge.data.frame(SFData, data, by.x = "ID", by.y = "ID")
+
+Joined <- Joined %>% 
+  filter(App.Application.Date!= "") %>% 
+  mutate(App.Application.Date = as.Date(App.Application.Date, format = "%m/%d/%Y")) %>% 
+  select(Last.Name.x, Email, Primary.City, Primary.State.Province, Student.Type, App.Application.Date) 
+
+Joined <- Joined %>% 
+  mutate(Month = as.yearmon(App.Application.Date))
+
+Joined <- Joined %>% mutate(
+  Mo = month(Month), 
+  Yr = year(Month)) %>% 
+  group_by(Month, Mo, Yr) %>% 
+  summarise(Apps = n())
+
+kable(Joined)
+# ggplot(Joined, aes(Mo, 
+#                 Apps, group=Yr), colour=Yr)+
+#   geom_line() +
+#   geom_point() +
+#   labs(x="Month", colour="Year") +
+#   theme_classic()
+# 
+# ggplot(Joined, aes(x = factor(Mo), y = Apps, color = factor(Yr))) + geom_line()
+```
+
+
+
+```{r}
+dat1 = data.frame(date = seq(as.Date("2017-08-01"), as.Date("2020-02-01"), "1 month"))
+dat1$date = as.yearmon(dat1$date)
+
+colorPalette <- c("#323DA5", "#FFC13D", "#4595A4", "#C55A82" )
+dat1$Apps <- c(1,0,0,4,4,4,5,9,5,7,5,5,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1)
+
+
+
+dat2 <- dat1 %>% mutate(
+  Mo = month(date), 
+  Yr = year(date)) %>% 
+  group_by(date, Mo, Yr) %>% 
+  summarise(Apps = sum(Apps))
+
+ggplot(dat1, aes(x = date, y = Apps))+ geom_line()+ theme_bw()+scale_color_manual(values= "red")
+# ggplot(dat2, aes(x = Mo, y = Apps, group = factor(Yr), color = factor(Yr)))+ geom_line(size = 1.2) +theme_bw() +  scale_color_manual(values=colorPalette)  
+# 
+# write.csv(dat2, "C:/Users/christine.iyer/Box/SpecialProjects/FlowOfApps_OnlinePrograms/Data/cleanData.csv")
+
+# birthstimeseries <- ts(dat2$Apps, frequency=12, start=c(2017,8), end = 2020,2)
+
+```
+
+![Picture](C:/Users/christine.iyer/Box/SpecialProjects/FlowOfApps_OnlinePrograms/ OnlineAppsFlow/TimeSeries.png)
+
 # Conclusions
 
-[If some literature is cited, it appears here]
-
-<!-- These lines ensure references are set with hanging indents in PDF documents -->
-\setlength{\parindent}{-0.5in}
-\setlength{\leftskip}{0.5in}
 
 
 
+
+```{r eval=FALSE, include=FALSE}
+
+
+
+Last2 <- c("Gorham", "Hansen", "Harlow", "Hayes", "Kidd", "LaChance", "LaPlante", "Lakari", "Lemelin", "Locke", "Madruga", "McDonald", "Myers-French", "Ortiz", "Perkins", "Prieto", "Rayner", "Rice", "Roberts", "Rutter", "Satterthwaite", "Selva", "Shehorn", "Smith", "Swisher", "Tower", "Violette", "Zafirson")
+
+First2 <- c("Frank", "Erik", "Angel", "Rebecca", "Mary", "Madison", "Meghan", "Adam", "Samantha", "Gregory", "Diane", "Jennifer", "Kala", "Anne-Marie", "Parker", "Jaslyn", "Mackenzie", "Lori", "Dwayne", "Jasmin", "Justine", "Holly", "Michael", "Jason", "Desiree", "Laci", "Austin", "Alexander")
+
+Last <- 
+c("Arsenault", "Bauer", "Binette", "DeLorge", "Greene-Cairnduff", "LeBlanc", "Ludwick", "McWhirk", "Racicot", "Richard", "Yandow", "Anderson", "Antil", "Barter", "Bayley", "Beaucage", "Bishop", "Blackington", "Burgess", "Carr", "Cunneen", "Duxbury", "Esty", "Fontaine", "Foster", "Gauthier", "Gentle", "Goding")
+  
+First <- c("Heather-Anne", "Shalyn", "Gwendolyn", "Cheri", "Bruce", "Alexander", "Sarah", "Shaleen", "Christine", "Renee", "David", "Heather", "Kelsea", "Hali", "Flora", "Craig", "Rachel", "Julia", "Kelly", "Ryan", "Marissa", "Jennifer", "Taylor", "Candi", "Carol", "Heather", "Gianpaolo", "Megan")
+
+
+
+FL1 <- cbind.data.frame(Last, First)
+FL2 <- cbind.data.frame(Last2, First2)
+FL1
+FL2
+```
