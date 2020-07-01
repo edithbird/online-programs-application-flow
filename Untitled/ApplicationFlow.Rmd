@@ -22,7 +22,7 @@ classoption:
   - oneside
   #- more options here, see rmarkdown documentation 
 lang: en-En
-lof: yes
+lof: no
 lot: no
 toc: no
 numbersections: yes
@@ -55,21 +55,19 @@ library(blastula)
 
 # Basic Description
 
-The purpose of this report is to look at the application flow for students who have matriculated into one of the University's Online Degree Programs. These programs are ever evolving and in order to meet applicant needs, we want to be attentive to their behavior and demographics.  
+The purpose of this report is to look at the application flow for students who have matriculated into one of the University's Online Undergraduate Degree Programs. These programs are ever evolving and in order to meet applicant needs, we want to be attentive to their behavior and demographics.  
+```{r}
+# Question that needs to be answered:
+# 
+# 1. Are the students in the original data  (51 records) all enrolled?
+# 
+# 1. In order to get application dates, this data set has to be merged with the SF database.
+# 
+# 1. Look in SF for online degree
+```
 
-Question that needs to be answered:
 
-1. Are the students in the original data  (51 records) all enrolled?
 
-1. In order to get application dates, this data set has to be merged with the SF database.
-
-1. Look in SF for online degree
-
-## Wrike Link
-See the documentation of [Wrike Project Description](https://www.wrike.com/open.htm?id=523544264)
-
-## Github Link 
-See the documentation of [Github Repository](https://github.com/edithbird/online-programs-application-flow) 
 
 
 # Findings
@@ -82,6 +80,7 @@ The data reveals a puzzling pattern. Beginning in September, 2018, no students a
 
 ```{r}
 SFData <- read.csv("C:/Users/christine.iyer/Box/SpecialProjects/FlowOfApps_OnlinePrograms/Data/SFData.csv", header = T, stringsAsFactors = F)
+dim(SFData)
 data <- read.csv("C:/Users/christine.iyer/Box/SpecialProjects/FlowOfApps_OnlinePrograms/Data/rawData.csv", header = T, stringsAsFactors = F)
 ```
 
@@ -188,3 +187,71 @@ FL2 <- cbind.data.frame(Last2, First2)
 FL1
 FL2
 ```
+
+### Jon's New Data
+
+```{r}
+newData <- read.csv("C:/Users/christine.iyer/Box/SpecialProjects/FlowOfApps_OnlinePrograms/Data/OnlineAppFlow.csv", header = T, stringsAsFactors = F)
+```
+
+c("0784598", "1012328", "0503608", "1039690", "1037454", "1046491", "0817961", "0582189", "1019845", "0811835", "0478592", "0879113", "1021397", "0444905", "0485971", "0732058", "0821780", "0507239", "0515098", "0872233", "1026722", "0799316", "0512484", "1050336", "1053223",
+
+"0226069", "1034171", "0894295", "0533614", "0893719", "0256508", "1027640", "1044761", "1023592", "1041469", "0908265", "1044240", "0955692", "0949584", "1035495", "0842160", "1030893", "1053283", "0921920", "1052935", 
+
+"0520358", "0447359", "0836655", "1005825", "1030131", "0243099", "1051464", "0043653", "0734238", "1051350", "1051941", "1040112", "1043802", "0424749", "1044166", "0992858", "0256953", "0778932", "0756414", "0629852", 
+
+
+"1014996", "1034846", "1049693", "1034847", "0955303", 
+"1050855", "0969354", "0812521", "0960812", "1012123", "0248459", "0892646", "1043800", "0539687", "0796270", "1042294", "0960310", "0981662", "0543429", "0436148",
+"0964278", "1029429", "1005812", "0400543", "0778965", 
+
+"1020554", "1050313", "0582177", "0992512", "0238275", "0272443", "0904975", "0587202", "0984358", "0432993", "0960632", "1038758", "1042962", "0281687", "0979632", "1025735", "1039116", "0512797", "1015343", "0859960", 
+
+"0755618", "0463033", "0456711", "1053218", "0225846", "1045582", "0585459", "1051724", "0688474", "0603328", "1046929", "0519519", "1052048", "0992876", "1046566", "0454574", "0775773", "1038152")
+
+
+```{r}
+PeopleSoftID <- c("0784598", "1012328", "0503608", "1039690", "1037454", "1046491", "0817961", "0582189", "1019845", "0811835", "0478592", "0879113", "1021397", "0444905", "0485971", "0732058", "0821780", "0507239", "0515098", "0872233", "1026722", "0799316", "0512484", "1050336", "1053223",
+
+"0226069", "1034171", "0894295", "0533614", "0893719", "0256508", "1027640", "1044761", "1023592", "1041469", "0908265", "1044240", "0955692", "0949584", "1035495", "0842160", "1030893", "1053283", "0921920", "1052935", 
+
+"0520358", "0447359", "0836655", "1005825", "1030131", "0243099", "1051464", "0043653", "0734238", "1051350", "1051941", "1040112", "1043802", "0424749", "1044166", "0992858", "0256953", "0778932", "0756414", "0629852", 
+
+
+"1014996", "1034846", "1049693", "1034847", "0955303", 
+"1050855", "0969354", "0812521", "0960812", "1012123", "0248459", "0892646", "1043800", "0539687", "0796270", "1042294", "0960310", "0981662", "0543429", "0436148",
+"0964278", "1029429", "1005812", "0400543", "0778965", 
+
+"1020554", "1050313", "0582177", "0992512", "0238275", "0272443", "0904975", "0587202", "0984358", "0432993", "0960632", "1038758", "1042962", "0281687", "0979632", "1025735", "1039116", "0512797", "1015343", "0859960", 
+
+"0755618", "0463033", "0456711", "1053218", "0225846", "1045582", "0585459", "1051724", "0688474", "0603328", "1046929", "0519519", "1052048", "0992876", "1046566", "0454574", "0775773", "1038152")
+```
+
+```{r}
+data1 <- read.csv("C:/Users/christine.iyer/Box/SpecialProjects/FlowOfApps_OnlinePrograms/Data/OneJohns2.csv", header = T, stringsAsFactors = F)
+data2 <- read.csv("C:/Users/christine.iyer/Box/SpecialProjects/FlowOfApps_OnlinePrograms/Data/TwoJohns2.csv", header = T, stringsAsFactors = F)
+data3 <- read.csv("C:/Users/christine.iyer/Box/SpecialProjects/FlowOfApps_OnlinePrograms/Data/ThreeJohns2.csv", header = T, stringsAsFactors = F)
+data4 <- read.csv("C:/Users/christine.iyer/Box/SpecialProjects/FlowOfApps_OnlinePrograms/Data/FourJohns2.csv", header = T, stringsAsFactors = F)
+data5 <- read.csv("C:/Users/christine.iyer/Box/SpecialProjects/FlowOfApps_OnlinePrograms/Data/FiveJohns2.csv", header = T, stringsAsFactors = F)
+data6 <- read.csv("C:/Users/christine.iyer/Box/SpecialProjects/FlowOfApps_OnlinePrograms/Data/SixJohns2.csv", header = T, stringsAsFactors = F)
+JohnDraft <- rbind.data.frame(data1, data2, data3, data4, data5, data6)
+
+Summary <- JohnDraft %>% 
+  filter(App.Application.Date != "") %>% 
+  mutate(App.Application.Date = as.Date(App.Application.Date, format = "%m/%d/%Y")) %>% 
+  group_by(ID = PeopleSoft.ID, App.Application.Date, Email, App.Application.Status, ) %>% summarise(n = n())
+
+range(Summary$App.Application.Date)
+
+head(newData)
+
+newJoined <- merge(newData, Summary)
+newJoined %>% filter(Enrolled == "x")
+```
+
+
+## Wrike Link
+See the documentation of [Wrike Project Description](https://www.wrike.com/open.htm?id=523544264)
+
+## Github Link 
+See the documentation of [Github Repository](https://github.com/edithbird/online-programs-application-flow) 

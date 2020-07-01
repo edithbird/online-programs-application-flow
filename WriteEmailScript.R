@@ -4,6 +4,22 @@ library(tidyverse)
 library(ggplot2)
 library(glue)
 library(formattable)
+
+# Create Plot 
+# Plot Picture saved to Imgur:
+  
+  the_plot <- ggplot(dat1, aes(x = date, y = Apps))+ geom_line()+ theme_bw()+scale_color_manual(values= "red")
+the_plot
+
+imgur_image <-
+  add_imgur_image(
+    image = the_plot,
+    client_id = "851117406f0b457"
+  )
+
+
+
+
 image <- "C:/Users/christine.iyer/Box/Email_Generation/CappexLeads.png"
 imgur_image <-
   add_imgur_image(
@@ -14,13 +30,16 @@ imgur_image <-
 body_text <-
   glue(
     "
-Good Afternoon Jon,
 
-I wanted to follow up on the application flow for matriculated  \\
-students in Online Programs. I matched the raw data you sent me from ME St \\
-with the SF data to get the application timeline.\\
-There's such a huge gap so I wanted you to double check it. \\
-If it looks like you think it should, I'll proceed with my report.\\
+
+The data he sent makes much more sense. \\
+It was excluding students who are not yet captured \\
+because the census report is a couple months away. We \\
+discussed criteria for a new list which will hopefully \\ 
+include students who have deposited and are due to start \\
+in the upcoming months. This will give us a second year \\
+of applications so we can look at the patterns of ap-\\
+plication flow. He's sending the list by EOD tomorrow.
 
 
 
@@ -29,17 +48,17 @@ If it looks like you think it should, I'll proceed with my report.\\
 
 Thank you,
 
-Christine Iyer\\
-Marketing Data Analyst\\
+Christine Iyer \\
+Marketing Data Analyst \\
 University of Southern Maine
 "
   ) %>% md()
 
 compose_email(body = body_text) %>%
   smtp_send(
-    to = "jbarker@maine.edu",
-    cc = "tracy.st@maine.edu",
+    to = "wrike+into523544264@wrike.com",
+    #cc = "tracy.st@maine.edu",
     from = "christine.iyer@maine.edu",
-    subject = "App Flow for Online Students",
+    subject = "Project Update",
     credentials = creds_key(id = "gmail")
   )

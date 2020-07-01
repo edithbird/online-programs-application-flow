@@ -22,7 +22,7 @@ classoption:
   - oneside
   #- more options here, see rmarkdown documentation 
 lang: en-En
-lof: yes
+lof: no
 lot: no
 toc: no
 numbersections: yes
@@ -55,21 +55,20 @@ library(blastula)
 
 # Basic Description
 
-The purpose of this report is to look at the application flow for students who have matriculated into one of the University's Online Degree Programs. These programs are ever evolving and in order to meet applicant needs, we want to be attentive to their behavior and demographics.  
+The purpose of this report is to look at the application flow for students who have matriculated into one of the University's Online Undergraduate Degree Programs. These programs are ever evolving and in order to meet applicant needs, we want to be attentive to their behavior and demographics.
 
-Question that needs to be answered:
+```{r}
+# Question that needs to be answered:
+# 
+# 1. Are the students in the original data  (51 records) all enrolled?
+# 
+# 1. In order to get application dates, this data set has to be merged with the SF database.
+# 
+# 1. Look in SF for online degree
+```
 
-1. Are the students in the original data  (51 records) all enrolled?
 
-1. In order to get application dates, this data set has to be merged with the SF database.
 
-1. Look in SF for online degree
-
-## Wrike Link
-See the documentation of [Wrike Project Description](https://www.wrike.com/open.htm?id=523544264)
-
-## Github Link 
-See the documentation of [Github Repository](https://github.com/edithbird/online-programs-application-flow) 
 
 
 # Findings
@@ -142,7 +141,7 @@ dat2 <- dat1 %>% mutate(
   group_by(date, Mo, Yr) %>% 
   summarise(Apps = sum(Apps))
 
-the_plot <- ggplot(dat1, aes(x = date, y = Apps))+ geom_line()+ theme_bw()+scale_color_manual(values= "red")
+the_plot <- ggplot(dat2, aes(x = date, y = Apps))+ geom_line(color = "blue")+ theme_bw()
 the_plot
 
 imgur_image <-
@@ -159,6 +158,63 @@ imgur_image <-
 ```
 
 
+# Application Flow for Students who were no longer enrolled as of Census 2019
+
+Because the sample of enrollees in online undergraduate programs is small, I thought it might broaden the sample to include applicants who did not enroll. However, this makes little difference. It appears that the data we are looking for, the cohort of students who will start this September, will not be available until Census. 
+
+```{r}
+
+
+newDatafromJon <- read.csv("C:/Users/christine.iyer/Box/SpecialProjects/FlowOfApps_OnlinePrograms/Data/OnlineAppFlow.csv", header = T, stringsAsFactors = F)
+
+Joined_2_AllApps <- merge.data.frame(SFData, newDatafromJon, by.x = "ID", by.y = "ID")
+
+```
+
+```{r newData part 2}
+
+Joined_2_AllApps <- Joined_2_AllApps %>% 
+  filter(App.Application.Date!= "") %>% 
+  mutate(App.Application.Date = as.Date(App.Application.Date, format = "%m/%d/%Y")) %>% 
+  select(Last.Name.x, Email, Primary.City, Primary.State.Province, Student.Type, App.Application.Date) 
+
+Joined_2_AllApps <- Joined_2_AllApps %>% 
+  mutate(Month = as.yearmon(App.Application.Date))
+
+Joined_2_AllApps <- Joined_2_AllApps %>% mutate(
+  Mo = month(Month), 
+  Yr = year(Month)) %>% 
+  group_by(Month, Mo, Yr) %>% 
+  summarise(Apps = n())
+
+
+
+datNew = data.frame(date = seq(as.Date("2017-08-01"), as.Date("2020-02-01"), "1 month"))
+datNew$date = as.yearmon(datNew$date)
+
+colorPalette <- c("#323DA5", "#FFC13D", "#4595A4", "#C55A82" )
+
+datNew$Apps <- c(1,1,0,4,4,4,5,10,5,8,6,5,5,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1)
+
+
+datNew2 <- datNew %>% 
+  mutate(
+  Mo = month(date), 
+  Yr = year(date)) %>% 
+  group_by(date, Mo, Yr) %>% 
+  summarise(Apps = sum(Apps))
+
+the_plot_2 <- ggplot(datNew2, aes(x = date, y = Apps))+ geom_line(color = "blue")+ theme_bw()
+the_plot_2
+
+imgur_image <-
+   add_imgur_image(
+     image = the_plot_2,
+     client_id = "851117406f0b457"
+   )
+
+
+```
 
 # Conclusions
 
@@ -166,6 +222,8 @@ imgur_image <-
 * The data provided raises many questions and opportunities for future exploration. 
   - We should look at application flow and demographics for students in online graduate programs as well. 
   - Do we want to look at the behavior of all students who have indicated an interest in online programs? There is an attribute in Salesforce, a check box for online interest in both Undergraduate and Graduate programs. A little over 3,000 students have indicated an interest. We can discuss this further. 
+  
+  - We cannot look at the application flow for graduate students in online programs because this student group is not defined.
 
 
 ```{r eval=FALSE, include=FALSE}
@@ -188,3 +246,11 @@ FL2 <- cbind.data.frame(Last2, First2)
 FL1
 FL2
 ```
+
+## Wrike Link
+See the documentation of [Wrike Project Description](https://www.wrike.com/open.htm?id=523544264)
+
+## Github Link 
+See the documentation of [Github Repository](https://github.com/edithbird/online-programs-application-flow) 
+
+
