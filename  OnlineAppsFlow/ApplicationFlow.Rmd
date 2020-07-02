@@ -22,10 +22,8 @@ classoption:
   - oneside
   #- more options here, see rmarkdown documentation 
 lang: en-En
-lof: no
-lot: no
 toc: no
-numbersections: yes
+numbersections: no
 UP_title: yes
 UP_subtitle: yes
 shaded_quote: no
@@ -55,7 +53,7 @@ library(blastula)
 
 # Basic Description
 
-The purpose of this report is to look at the application flow for students who have matriculated into one of the University's Online Undergraduate Degree Programs. These programs are ever evolving and in order to meet applicant needs, we want to be attentive to their behavior and demographics.
+The purpose of this report is to look at the application flow for students who have matriculated into one of the University's Online Undergraduate Degree Programs. These programs are ever evolving and in order to meet applicant needs, we want to be attentive to their timing, behavior and demographics. 
 
 ```{r}
 # Question that needs to be answered:
@@ -74,9 +72,9 @@ The purpose of this report is to look at the application flow for students who h
 # Findings
 
 
-The raw data is all 2018/2019 online undergraduate net enrollees as of census 2019.
+The raw data is all 2018/2019 online undergraduate net enrolls as of Census 2019. The enrollment data comes from the Peoplesoft database.
 
-The data reveals a puzzling pattern. Beginning in September, 2018, no students applied. I have shared these findings with Jon Barker to get clarification. 
+Beginning in September 2018, it would appear no students applied to an Undergraduate Online Program. I shared these findings with Jon Barker to get clarification. The plot below highlights the limitations of the databases. Until Census 2020, when student enrollment status in an online program is confirmed, we will not have access to the application dates. Online programs are not officially captured in Salesforce. Until the next census report, we can only see the application flow for students who were enrolled prior to Fall 2019.    
 
 
 ```{r}
@@ -84,17 +82,10 @@ SFData <- read.csv("C:/Users/christine.iyer/Box/SpecialProjects/FlowOfApps_Onlin
 data <- read.csv("C:/Users/christine.iyer/Box/SpecialProjects/FlowOfApps_OnlinePrograms/Data/rawData.csv", header = T, stringsAsFactors = F)
 ```
 
-**Where are the online students from?**
-
-Most enrollees come from Maine, Cumberland, York, and Androscoggin counties. A county summary is shown below.
-
-```{r}
-kable(data %>% group_by(State, County) %>% summarise(n = n()))
-```
 
 **When do students apply?**
 
-The following table summarizes how many applicants applied in each month. Notice the large gap from September 2018 through November, 2019. 
+The following table summarizes how many applicants applied in each month. Again the large gap from September 2018 through November 2019 should be filled in at the next census report. 
 
 ```{r}
 Joined <- merge.data.frame(SFData, data, by.x = "ID", by.y = "ID")
@@ -137,11 +128,14 @@ dat1$Apps <- c(1,0,0,4,4,4,5,9,5,7,5,5,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1)
 
 dat2 <- dat1 %>% mutate(
   Mo = month(date), 
-  Yr = year(date)) %>% 
-  group_by(date, Mo, Yr) %>% 
+  Yr = year(date), 
+  date = as.Date(date)) %>% 
+  group_by(date
+           ) %>% 
   summarise(Apps = sum(Apps))
 
-the_plot <- ggplot(dat2, aes(x = date, y = Apps))+ geom_line(color = "blue")+ theme_bw()
+the_plot <- ggplot(dat2, aes(x = date, y = Apps))+ geom_line(color = "blue")+ theme_bw() + 
+      scale_x_date(date_breaks = "months" , date_labels = "%m-%y") + theme(axis.text.x = element_text(angle = 90))
 the_plot
 
 imgur_image <-
@@ -157,10 +151,17 @@ imgur_image <-
 # ![Picture](C:/Users/christine.iyer/Box/SpecialProjects/FlowOfApps_OnlinePrograms/ OnlineAppsFlow/TimeSeries.png)
 ```
 
+**Where are the online students from?**
 
-# Application Flow for Students who were no longer enrolled as of Census 2019
+Most enrolls come from Maine, Cumberland, York, and Androscoggin counties. A county summary is shown below.
 
-Because the sample of enrollees in online undergraduate programs is small, I thought it might broaden the sample to include applicants who did not enroll. However, this makes little difference. It appears that the data we are looking for, the cohort of students who will start this September, will not be available until Census. 
+```{r}
+kable(data %>% group_by(State, County) %>% summarise(n = n()))
+```
+
+**Application Flow for Students who were no longer enrolled as of Census 2019**
+
+Because the sample of enrolls in online undergraduate programs is small, I thought it might broaden the sample to include applicants who did not enroll. However, this makes little difference. Most students who enrolled, have maintained their enrollment status.
 
 ```{r}
 
@@ -200,11 +201,13 @@ datNew$Apps <- c(1,1,0,4,4,4,5,10,5,8,6,5,5,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1)
 datNew2 <- datNew %>% 
   mutate(
   Mo = month(date), 
-  Yr = year(date)) %>% 
-  group_by(date, Mo, Yr) %>% 
+  Yr = year(date),
+  date = as.Date(date)) %>% 
+  group_by(date) %>% 
   summarise(Apps = sum(Apps))
 
-the_plot_2 <- ggplot(datNew2, aes(x = date, y = Apps))+ geom_line(color = "blue")+ theme_bw()
+the_plot_2 <- ggplot(datNew2, aes(x = date, y = Apps))+ geom_line(color = "blue")+ theme_bw() + 
+      scale_x_date(date_breaks = "months" , date_labels = "%m-%y") + theme(axis.text.x = element_text(angle = 90))
 the_plot_2
 
 imgur_image <-
@@ -219,12 +222,19 @@ imgur_image <-
 # Conclusions
 
 
-* The data provided raises many questions and opportunities for future exploration. 
-  - We should look at application flow and demographics for students in online graduate programs as well. 
-  - Do we want to look at the behavior of all students who have indicated an interest in online programs? There is an attribute in Salesforce, a check box for online interest in both Undergraduate and Graduate programs. A little over 3,000 students have indicated an interest. We can discuss this further. 
-  
-  - We cannot look at the application flow for graduate students in online programs because this student group is not defined.
+* The data provided raises many questions and opportunities.
 
+* We have access to the flow for undergraduate online programs for about one application cycle, September 2017-September 2018. Applications appear to trickle in throughout the year, peaking January-May.
+
+* It should be noted that the application flow for Graduate Online programs is not captured in either Peoplesoft or Salesforce.
+
+* The Data Governance Committee had set the coding of online programs as a high priority agenda item in March, 2018. No clear resolution has been put in place as of today.
+
+* As of last census, most Online students were In-State, mainly Cumberland, York, and Androscoggin counties.
+
+* Do we want to look at the behavior of all students who have indicated an interest in online programs? There is an attribute in Salesforce, a check box for online interest in both Undergraduate and Graduate programs. A little over 3,000 students have indicated an interest. However, according to Jon Barker, this is an unreliable method. We can discuss this further. 
+  
+ 
 
 ```{r eval=FALSE, include=FALSE}
 
@@ -247,10 +257,8 @@ FL1
 FL2
 ```
 
-## Wrike Link
-See the documentation of [Wrike Project Description](https://www.wrike.com/open.htm?id=523544264)
+[Wrike Project Description](https://www.wrike.com/open.htm?id=523544264)
 
-## Github Link 
-See the documentation of [Github Repository](https://github.com/edithbird/online-programs-application-flow) 
+[Github Repository](https://github.com/edithbird/online-programs-application-flow) 
 
 
