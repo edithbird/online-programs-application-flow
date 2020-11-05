@@ -78,8 +78,15 @@ Beginning in September 2018, it would appear no students applied to an Undergrad
 
 
 ```{r}
-SFData <- read.csv("C:/Users/christine.iyer/Box/SpecialProjects/FlowOfApps_OnlinePrograms/Data/SFData.csv", header = T, stringsAsFactors = F)
-data <- read.csv("C:/Users/christine.iyer/Box/SpecialProjects/FlowOfApps_OnlinePrograms/Data/rawData.csv", header = T, stringsAsFactors = F)
+SFData <- read.csv("C:/Users/christine.iyer/Box/FY20 SpecialProjects/FlowOfApps_OnlinePrograms/Data/SFData.csv", header = T, stringsAsFactors = F)
+data <- read.csv("C:/Users/christine.iyer/Box/FY20 SpecialProjects/FlowOfApps_OnlinePrograms/Data/rawData.csv", header = T, stringsAsFactors = F)
+dataUpdated <- read.csv("C:/Users/christine.iyer/Box/FY20 SpecialProjects/FlowOfApps_OnlinePrograms/Data/FA20_undergrad_online_admission_10-15-20.csv", header = T, stringsAsFactors = F)
+
+head(data)
+data[, 2]
+```
+```{r}
+head(dataUpdated)
 ```
 
 
