@@ -79,14 +79,32 @@ Beginning in September 2018, it would appear no students applied to an Undergrad
 
 ```{r}
 SFData <- read.csv("C:/Users/christine.iyer/Box/FY20 SpecialProjects/FlowOfApps_OnlinePrograms/Data/SFData.csv", header = T, stringsAsFactors = F)
+dim(SFData)
 data <- read.csv("C:/Users/christine.iyer/Box/FY20 SpecialProjects/FlowOfApps_OnlinePrograms/Data/rawData.csv", header = T, stringsAsFactors = F)
 dataUpdated <- read.csv("C:/Users/christine.iyer/Box/FY20 SpecialProjects/FlowOfApps_OnlinePrograms/Data/FA20_undergrad_online_admission_10-15-20.csv", header = T, stringsAsFactors = F)
+
 
 head(data)
 data[, 2]
 ```
 ```{r}
-head(dataUpdated)
+# this is the updated data from Census
+AppAlls <- read.csv("C:/Users/christine.iyer/Box/FY20 SpecialProjects/FlowOfApps_OnlinePrograms/Data/AllAppsToFilterOnlineApps.csv", header = T, stringsAsFactors = F)
+dataUpdated %>% select(ID)
+vector <- as.vector(dataUpdated$ID)
+vector <- c(1107958L, 973261L, 1107902L, 818218L, 574383L, 666881L, 1108830L, 1054410L, 1109203L, 1034846L, 1106019L, 1103834L, 1111274L, 1109722L, 948254L, 1106431L, 659102L, 1103177L, 1089976L, 1089976L, 856213L, 1112943L, 1112295L, 1033383L, 1104942L, 1111339L, 1113413L, 600316L, 1112788L, 965467L, 965467L, 1087732L, 1083237L, 824946L, 1103053L, 1098830L, 647589L, 1020508L, 961023L, 1108221L, 776350L, 800077L, 1070426L, 828569L, 739048L, 1055438L, 1053417L, 992858L, 932142L, 778932L, 520412L, 874124L, 1114114L, 787429L, 1105216L, 1099574L, 517046L, 982521L, 1115058L, 1094933L, 751769L, 1110512L, 1050200L, 638587L, 442860L, 1109076L, 442675L, 933732L, 920848L, 1086179L, 1109718L, 1114238L, 1111417L, 669879L, 1110855L, 1102101L, 909013L, 1076792L, 1111859L, 345605L, 846458L, 1111414L, 693468L, 1018430L, 1086196L)
+vector <- as.integer(vector)
+AppAlls <- AppAlls %>% rename(ID = PeopleSoftID) %>% select(-Age)
+new <- left_join(dataUpdated, AppAlls)
+```
+
+
+```{r}
+dataUpdated <- dataUpdated %>% select(ID, Appl.Nbr, Last.Name, First.Name, Age, Birthdate, Report.Term, Admit.Type, Admission.Residency, Status, Housing, Admit.Term, Enrolled.Flag, Max.Admit.Date, Matric.Date, Acad.Plan, City, State, Postal, County, Acad.Load, HSGPA, Group.Name )
+data <- data %>% select(ID, Appl.Nbr, Last.Name, First.Name, Age, Birthdate, Report.Term, Admit.Type, Admission.Residency, Status, Housing, Admit.Term, Enrolled.Flag, Max.Admit.Date, Matric.Date, Acad.Plan, City, State, Postal, County, Acad.Load, HSGPA, Group.Name )
+
+unique(dataUpdated$Group.Name)
+unique(data$Group.Name)
 ```
 
 
