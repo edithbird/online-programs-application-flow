@@ -131,7 +131,7 @@ The first shows that there has been growth in the last census year.
 
 # 
 
-```{r fig.height=3, fig.width=8}
+```{r one, fig.height=3, fig.width=8}
 SoilSciGuylabs <- c("July", "August", "September", "October", "November", "December", "January", "February", "March", "April" ,"May", "June")
 
 
@@ -153,7 +153,7 @@ The second plot, shown below, captures the same data on a time line. The second 
 
 #
 
-```{r fig.height=3, fig.width=8}
+```{r two, fig.height=3, fig.width=8}
 Data <- Data %>% mutate(DATE = as.Date(DATE, format = "%m/%d/%Y"))
 ggplot(Data, aes(x = DATE,
                 Applications.for.Online.Programs))+
@@ -174,7 +174,7 @@ The final plot, shown below, marks the flow of marketing inquiry forms (as an in
 
 #
 
-```{r fig.height=3, fig.width=8}
+```{r three, fig.height=3, fig.width=8}
 MarketingForms <- read.csv("C:/Users/christine.iyer/Box/FY20 SpecialProjects/FlowOfApps_OnlinePrograms/Data/MarketingInquiryForms.csv", header = T, stringsAsFactors = F)
 
 MarketingForms1 <- MarketingForms %>% 
@@ -200,9 +200,9 @@ plot <- ggplot(MarketingForms2, aes(x=DateMY, y=MarktingInquiryForms))
     
 ```
 
-__Age of Applicant__
+Age of Applicant
 
-```{r}
+```{r Jons}
 kable(JonsData1) 
 ```
 

@@ -73,38 +73,38 @@ JonsData1 <- JonsData %>%  mutate_at(
 ```
 
 ```{r eval=FALSE, include=FALSE}
-# Joined_N <- JonsData1 %>% 
-#   select(Last.Name,  City, State,  App.Application.Date) 
+Joined_N <- JonsData1 %>% 
+  select(Last.Name,  City, State,  App.Application.Date) 
+
+Joined_N <- Joined_N %>% 
+  mutate(Month = as.yearmon(App.Application.Date))
+
+Joined_N <- Joined_N %>% mutate(
+  Mo = month(Month), 
+  Yr = year(Month)) %>% 
+  group_by(Month, Mo, Yr) %>% 
+  summarise(Apps = n())
+
+Joined_N <- Joined_N %>% select(Month, Apps)
+
+OldData <- read.csv("C:/Users/christine.iyer/Box/FY20 SpecialProjects/FlowOfApps_OnlinePrograms/Data/LastYearData.csv", header = T, stringsAsFactors = F)
+
+#kable(OldData, caption = "Last Year") %>%
+#   
+#   kable_styling(full_width = FALSE, position = "float_left")
 # 
-# Joined_N <- Joined_N %>% 
-#   mutate(Month = as.yearmon(App.Application.Date))
 # 
-# Joined_N <- Joined_N %>% mutate(
-#   Mo = month(Month), 
-#   Yr = year(Month)) %>% 
-#   group_by(Month, Mo, Yr) %>% 
-#   summarise(Apps = n())
 # 
-# Joined_N <- Joined_N %>% select(Month, Apps)
-# 
-# OldData <- read.csv("C:/Users/christine.iyer/Box/FY20 SpecialProjects/FlowOfApps_OnlinePrograms/Data/LastYearData.csv", header = T, stringsAsFactors = F)
-# 
-# #kable(OldData, caption = "Last Year") %>%
-# #   
-# #   kable_styling(full_width = FALSE, position = "float_left")
-# # 
-# # 
-# # 
-# # kable(Joined_N, caption = "This Year") %>%
-# #   kable_styling(full_width = FALSE, position = "left")
-# 
-# Joined_N <- Joined_N %>% mutate(Month = as.character(Month))
-# 
-# UTDData_DeletedDups <- rbind.data.frame(OldData, Joined_N)
-# UTDData_DeletedDups[20,3] <- 5
-# 
-# UTDData_DeletedDups <- UTDData_DeletedDups %>% mutate(Month = as.yearmon(Month, format = "%b %Y")) %>% na.omit()
-# # write.csv(UTDData_DeletedDups, "C:/Users/christine.iyer/Box/FY20 SpecialProjects/FlowOfApps_OnlinePrograms/Data/TidiedDataAll.csv", row.names = F)
+# kable(Joined_N, caption = "This Year") %>%
+#   kable_styling(full_width = FALSE, position = "left")
+
+Joined_N <- Joined_N %>% mutate(Month = as.character(Month))
+
+UTDData_DeletedDups <- rbind.data.frame(OldData, Joined_N)
+UTDData_DeletedDups[20,3] <- 5
+
+UTDData_DeletedDups <- UTDData_DeletedDups %>% mutate(Month = as.yearmon(Month, format = "%b %Y")) %>% na.omit()
+# write.csv(UTDData_DeletedDups, "C:/Users/christine.iyer/Box/FY20 SpecialProjects/FlowOfApps_OnlinePrograms/Data/TidiedDataAll.csv", row.names = F)
 
   
 ```
@@ -203,7 +203,8 @@ plot <- ggplot(MarketingForms2, aes(x=DateMY, y=MarktingInquiryForms))
 __Age of Applicant__
 
 ```{r}
-kable(JonsData1) 
+kable(JonsData1) %>% 
+  kable_styling()
 ```
 
 

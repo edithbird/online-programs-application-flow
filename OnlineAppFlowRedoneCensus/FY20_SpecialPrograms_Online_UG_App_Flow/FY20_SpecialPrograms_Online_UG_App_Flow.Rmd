@@ -2,6 +2,7 @@
 title: "Marketing Report"
 subtitle: "Office of Marketing and Brand Management"
 date: "`r Sys.Date()`"
+
 output:
   tufte::tufte_handout:
     citation_package: natbib
@@ -16,18 +17,11 @@ link-citations: yes
 
 ```{r setup, include=FALSE}
 library(tufte)
-library(knitr)
-library(formatR)
-library(lubridate)
-library(zoo)
-library(gt)
-library(glue)
-library(formattable)
 library(hms)
 library(tidyverse)
 library(knitr)
-library(ggpubr)
-library(kableExtra)
+library(zoo)
+
 
 # invalidate cache when the tufte version changes
 knitr::opts_chunk$set(
@@ -39,6 +33,7 @@ knitr::opts_chunk$set(
 )
 options(tinytex.verbose = TRUE)
 ```
+
 
 ```{r fig.height=3, fig.width=8}
 
@@ -131,7 +126,7 @@ The first shows that there has been growth in the last census year.
 
 # 
 
-```{r fig.height=3, fig.width=8}
+```{r one, fig.height=3, fig.width=8}
 SoilSciGuylabs <- c("July", "August", "September", "October", "November", "December", "January", "February", "March", "April" ,"May", "June")
 
 
@@ -153,7 +148,7 @@ The second plot, shown below, captures the same data on a time line. The second 
 
 #
 
-```{r fig.height=3, fig.width=8}
+```{r two, fig.height=3, fig.width=8}
 Data <- Data %>% mutate(DATE = as.Date(DATE, format = "%m/%d/%Y"))
 ggplot(Data, aes(x = DATE,
                 Applications.for.Online.Programs))+
@@ -174,15 +169,31 @@ The final plot, shown below, marks the flow of marketing inquiry forms (as an in
 
 #
 
-```{r fig.height=3, fig.width=8}
+```{r three, fig.height=3, fig.width=8}
 MarketingForms <- read.csv("C:/Users/christine.iyer/Box/FY20 SpecialProjects/FlowOfApps_OnlinePrograms/Data/MarketingInquiryForms.csv", header = T, stringsAsFactors = F)
 
 MarketingForms1 <- MarketingForms %>% 
   mutate(Initial.Source.Date = as.Date(Initial.Source.Date, format = "%m/%d/%Y"),
-         DateMY = as.yearmon(Initial.Source.Date), 
-         DateMY = as.Date(DateMY, format = "%b %Y")) %>% 
+         Birthdate = as.Date(Birthdate, format = "%m/%d/%Y"),
+         Age = round(difftime(Sys.Date(), Birthdate, units = "weeks"),0),
+         Age_Y = as.integer(round(Age/52, 0)),
+         AgeGroup = 
+           ifelse(Age_Y > 13 & Age_Y <=19, "19 and Under", 
+            ifelse(Age_Y > 19 & Age_Y < 25, "20-25", 
+              ifelse(Age_Y >= 25, "26 and Up", "Unknown"))), 
+         AgeGroup = ifelse(is.na(AgeGroup) , "Unknown", AgeGroup), 
+         FiscalYear = ifelse(Initial.Source.Date >="2015-07-01" & Initial.Source.Date <= "2016-06-30", "FY16", 
+                        ifelse(Initial.Source.Date>="2016-07-01" & Initial.Source.Date <= "2017-06-30", "FY17",
+                               ifelse(Initial.Source.Date>="2017-07-01" & Initial.Source.Date <= "2018-06-30", "FY18",
+                                    ifelse(Initial.Source.Date>="2018-07-01" & Initial.Source.Date <= "2019-06-30", "FY19",
+                                           ifelse(Initial.Source.Date>="2019-07-01" & Initial.Source.Date <= "2020-06-30", "FY20",
+                                                  ifelse(Initial.Source.Date>="2020-07-01" & Initial.Source.Date <= "2021-06-30", "FY21","FY15 or earlier")))))),
+         DateMY = as.yearmon(Initial.Source.Date),
+         DateMY = as.Date(DateMY, format = "%b %Y")) %>%
   count(DateMY) %>% 
-  filter(DateMY >= "2017-07-01") 
+  filter(DateMY >= "2017-07-01")
+
+
 MarketingForms2 <- MarketingForms1 %>% 
   rename(MarktingInquiryForms = n)
   
@@ -200,31 +211,54 @@ plot <- ggplot(MarketingForms2, aes(x=DateMY, y=MarktingInquiryForms))
     
 ```
 
-__Age of Applicant__
-
 ```{r}
+
+MarketingForms9 <- MarketingForms %>% 
+  mutate(Initial.Source.Date = as.Date(Initial.Source.Date, format = "%m/%d/%Y"),
+         Birthdate = as.Date(Birthdate, format = "%m/%d/%Y"),
+         Age = round(difftime(Sys.Date(), Birthdate, units = "weeks"),0),
+         Age_Y = as.integer(round(Age/52, 0)),
+         AgeGroup = 
+           ifelse(Age_Y > 13 & Age_Y <=19, "19 and Under", 
+            ifelse(Age_Y > 19 & Age_Y < 25, "20-25", 
+              ifelse(Age_Y >= 25, "26 and Up", "Unknown"))), 
+         AgeGroup = ifelse(is.na(AgeGroup) , "Unknown", AgeGroup), 
+         FiscalYear = ifelse(Initial.Source.Date >="2015-07-01" & Initial.Source.Date <= "2016-06-30", "FY16", 
+                        ifelse(Initial.Source.Date>="2016-07-01" & Initial.Source.Date <= "2017-06-30", "FY17",
+                               ifelse(Initial.Source.Date>="2017-07-01" & Initial.Source.Date <= "2018-06-30", "FY18",
+                                    ifelse(Initial.Source.Date>="2018-07-01" & Initial.Source.Date <= "2019-06-30", "FY19",
+                                           ifelse(Initial.Source.Date>="2019-07-01" & Initial.Source.Date <= "2020-06-30", "FY20",
+                                                  ifelse(Initial.Source.Date>="2020-07-01" & Initial.Source.Date <= "2021-06-30", "FY21","FY15 or earlier")))))),
+         DateMY = as.yearmon(Initial.Source.Date),
+         DateMY = as.Date(DateMY, format = "%b %Y")) %>%
+  filter(DateMY >= "2017-07-01")
+
+
+# MarketingForms9 %>% count(AgeGroup,FiscalYear) %>% 
+#   filter(grepl("FY2", FiscalYear))
+```
+
+
+Age of Applicant
+
+```{r Jons}
 kable(JonsData1) 
 ```
 
+The table above shows that the majority of applicants fall into the working adult audience. It is too soon to say whether will see an increase in the Current Undergraduate audience.  
 
 # Conclusions
 
  
 * While a small component of the University's portfolio of products, Online Programs have grown. 
 
+* The majority of the applicants are over 25 years old. 
+
 * Further analysis into the the performance of ads for the online programs might show a similar trend. 
 
 \href{https://www.wrike.com/open.htm?id=589938175}{{\color{blue}{\underline{Wrike Project Details}}}}
 
 \href{https://github.com/edithbird/online-programs-application-flow}{{\color{blue}{\underline{Github Repository}}}}
-
-```{marginfigure, echo = TRUE}
-Notice that there is no number preceding the note. $x \in [a, b]$有
-$$\frac{d}{dx}\left( \int_{a}^{x} f(u)\,du\right)=f(x).$$
-```
-
-
-
 
 
 ```{r bib, include=FALSE}

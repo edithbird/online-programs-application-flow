@@ -48,7 +48,6 @@ library(dplyr)
 library(ggplot2)
 library(zoo)
 library(lubridate)
-library(blastula)
 ```
 
 # Basic Description
@@ -129,7 +128,8 @@ Joined <- Joined %>% mutate(
   group_by(Month, Mo, Yr) %>% 
   summarise(Apps = n())
 
-kable(Joined %>% select(Month, Apps))
+Joined <- Joined %>% select(Month, Apps)
+write.csv(Joined, "C:/Users/christine.iyer/Box/FY20 SpecialProjects/FlowOfApps_OnlinePrograms/Data/LastYearData.csv", row.names = F)
 # ggplot(Joined, aes(Mo, 
 #                 Apps, group=Yr), colour=Yr)+
 #   geom_line() +
